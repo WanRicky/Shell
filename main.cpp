@@ -2,10 +2,11 @@
 #include "Shell.h"
 
 int main() {
-    Shell *s = new Shell();
+    std::string homedir = "/home/user/Documents";
+    Shell *s = new Shell(homedir);
     s->pwd();
-    s->cd("~/user/name");
-    s->cd("/usr/local/bash");
-    s->cd("././../../../hello/./");
+    s->distance("~/");
+    s->cd("~/");
+    s->pwd();
     return 0;
 }
