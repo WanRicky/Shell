@@ -61,7 +61,7 @@ Shell::Shell(std::string homedir){
 void Shell::cd() {
     currentPath = NULL;
     node *tail = NULL;
-    pwdhome();
+    //pwdhome();
     for(node *p = home; p != NULL; p = p->next){
         node *temp = new node(p->dir);
         if(currentPath == NULL){
@@ -154,13 +154,21 @@ void Shell::cd(std::string path) {
         pathHead->prev = tail;
     }
     for(node *p = currentPath; p != NULL; p = p->next) {
+        /*for(node *p = currentPath; p !=  NULL; p = p->next)
+            std::cout << p->dir;
+        std::cout << std::endl;*/
         if (p->next != NULL){
             if (p->dir == "./") {
                 p->prev->next = p->next;
                 p->next->prev = p->prev;
             } else if (p->dir == "../") {
-                p->prev->prev->next = p->next;
-                p->next->prev = p->prev->prev;
+                if(p->prev->dir != "/") {
+                    p->prev->prev->next = p->next;
+                    p->next->prev = p->prev->prev;
+                }else {
+                    p->prev->next = p->next;
+                    p->next->prev = p->prev;
+                }
             } else if(p->dir == "~/"){
                 node *q = p->next;
                 currentPath = NULL;
@@ -186,7 +194,10 @@ void Shell::cd(std::string path) {
                 p->prev->next = NULL;
             }
             else if(p->dir == "../") {
-                p->prev->prev->next = NULL;
+                if(p->prev->dir != "/")
+                    p->prev->prev->next = NULL;
+                else
+                    p->prev->next = NULL;
             }
             else if(p->dir == "~/"){
                 currentPath = NULL;
